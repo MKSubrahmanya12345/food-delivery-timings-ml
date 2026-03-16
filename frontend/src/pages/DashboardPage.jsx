@@ -41,6 +41,23 @@ const DashboardPage = () => {
 
             {user.role === 'customer' && (
                 <div className="space-y-12">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 animate-slide-up">
+                        <div className="bg-white p-6 rounded-[32px] border border-slate-100 flex items-center gap-4 premium-shadow">
+                            <div className="bg-primary/10 p-3 rounded-2xl text-primary"><ShoppingBag /></div>
+                            <div>
+                                <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Total Orders</p>
+                                <p className="text-2xl font-black text-secondary">{orders.length}</p>
+                            </div>
+                        </div>
+                        <div className="bg-white p-6 rounded-[32px] border border-slate-100 flex items-center gap-4 premium-shadow">
+                            <div className="bg-green-100 p-3 rounded-2xl text-green-600"><CheckCircle /></div>
+                            <div>
+                                <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Delivered</p>
+                                <p className="text-2xl font-black text-secondary">{orders.filter(o => o.status === 'delivered').length}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <section>
                         <div className="flex items-center justify-between mb-8">
                             <h2 className="text-2xl font-black text-secondary flex items-center gap-3">
@@ -51,20 +68,19 @@ const DashboardPage = () => {
                             {restaurants.map(r => (
                                 <Link to={`/restaurants/${r.id}`} key={r.id} className="group bg-white rounded-[32px] overflow-hidden border border-slate-100 hover:border-primary/30 transition-all hover:shadow-2xl hover:shadow-primary/5">
                                     <div className="h-48 bg-slate-100 relative overflow-hidden">
-                                         {/* Mock Image ??$$$ */}
                                          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 group-hover:scale-110 transition-transform duration-700"></div>
                                          <div className="absolute bottom-4 left-4 bg-white px-3 py-1 rounded-full text-xs font-black text-primary uppercase tracking-widest leading-none">
                                             {r.cuisineType || 'Fast Food'}
                                          </div>
                                     </div>
                                     <div className="p-6">
-                                        <h3 className="text-xl font-bold text-secondary mb-2">{r.name}</h3>
+                                        <h3 className="text-xl font-bold text-secondary mb-2 group-hover:text-primary transition-colors">{r.name}</h3>
                                         <p className="text-slate-500 text-sm font-medium mb-4">{r.address}</p>
                                         <div className="flex items-center justify-between">
                                             <span className="text-xs font-black bg-slate-50 px-3 py-1.5 rounded-xl text-slate-400">
                                                 {r.openingTime} - {r.closingTime}
                                             </span>
-                                            <div className="w-10 h-10 bg-secondary group-hover:bg-primary rounded-full flex items-center justify-center text-white transition-colors">
+                                            <div className="w-10 h-10 bg-secondary group-hover:bg-primary rounded-full flex items-center justify-center text-white transition-all group-hover:rotate-90">
                                                 <Plus />
                                             </div>
                                         </div>
@@ -73,86 +89,60 @@ const DashboardPage = () => {
                             ))}
                         </div>
                     </section>
-
-                    <section>
-                         <h2 className="text-2xl font-black text-secondary flex items-center gap-3 mb-8">
-                            <ShoppingBag className="text-primary" /> Your Recent Orders
-                        </h2>
-                        <div className="bg-white rounded-[40px] border border-slate-100 overflow-hidden premium-shadow">
-                            <table className="w-full text-left">
-                                <thead className="bg-slate-50 border-b border-slate-100">
-                                    <tr>
-                                        <th className="px-8 py-5 text-sm font-black text-slate-400 uppercase tracking-widest">Order ID</th>
-                                        <th className="px-8 py-5 text-sm font-black text-slate-400 uppercase tracking-widest">Restaurant</th>
-                                        <th className="px-8 py-5 text-sm font-black text-slate-400 uppercase tracking-widest">Status</th>
-                                        <th className="px-8 py-5 text-sm font-black text-slate-400 uppercase tracking-widest">Estimated Arrival</th>
-                                        <th className="px-8 py-5 text-sm font-black text-slate-400 uppercase tracking-widest">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-slate-50">
-                                    {orders.map(order => (
-                                        <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
-                                            <td className="px-8 py-6 font-bold text-secondary">#{order.id}</td>
-                                            <td className="px-8 py-6 font-bold text-secondary">{order.restaurant.name}</td>
-                                            <td className="px-8 py-6">
-                                                <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-tight
-                                                    ${order.status === 'delivered' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600'}`}>
-                                                    {order.status.replace('_', ' ')}
-                                                </span>
-                                            </td>
-                                            <td className="px-8 py-6">
-                                                <div className="flex items-center gap-2 text-primary font-black">
-                                                    <Clock className="h-4 w-4" />
-                                                    {order.predictedEtaMinutes ? `${order.predictedEtaMinutes} mins` : 'Calculating...'}
-                                                </div>
-                                            </td>
-                                            <td className="px-8 py-6">
-                                                <Link to={`/track/${order.id}`} className="text-secondary hover:text-primary transition-colors">
-                                                    <Eye />
-                                                </Link>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
                 </div>
             )}
 
             {user.role === 'restaurant_owner' && (
-                <div className="space-y-8">
-                     <h2 className="text-2xl font-black text-secondary flex items-center gap-3">
-                        <ShoppingBag className="text-primary" /> Incoming Orders
+                <div className="space-y-8 animate-slide-up">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                         <div className="bg-slate-900 p-6 rounded-[32px] text-white flex items-center gap-4 premium-shadow orange-glow">
+                            <div className="bg-primary p-3 rounded-2xl"><Utensils /></div>
+                            <div>
+                                <p className="text-xs font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Total Revenue</p>
+                                <p className="text-2xl font-black">${orders.reduce((acc, o) => acc + parseFloat(o.totalAmount), 0).toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <h2 className="text-2xl font-black text-secondary flex items-center gap-3 mt-12">
+                        <ShoppingBag className="text-primary" /> Active Orders
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {orders.map(order => (
-                            <div key={order.id} className="bg-white p-8 rounded-[40px] border border-slate-100 premium-shadow">
+                            <div key={order.id} className="bg-white p-8 rounded-[40px] border border-slate-100 hover:border-primary/20 transition-all premium-shadow">
                                 <div className="flex justify-between items-start mb-6">
                                     <div>
                                         <h3 className="text-xl font-black text-secondary">Order #{order.id}</h3>
                                         <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">{order.orderDate}</p>
                                     </div>
-                                    <span className="bg-blue-50 text-blue-600 font-black px-4 py-1.5 rounded-full text-xs uppercase">
+                                    <span className={`font-black px-4 py-1.5 rounded-full text-xs uppercase ${order.status === 'pending' ? 'bg-orange-50 text-orange-600' : 'bg-blue-50 text-blue-600'}`}>
                                         {order.status}
                                     </span>
                                 </div>
-                                <div className="mb-6 space-y-2">
+                                <div className="mb-8 space-y-3">
                                     {order.items.map(item => (
-                                        <div key={item.id} className="flex justify-between text-slate-500 font-medium">
-                                            <span>{item.quantity}x {item.menuItem.name}</span>
+                                        <div key={item.id} className="flex justify-between text-slate-500 font-bold text-sm">
+                                            <span className="flex items-center gap-2">
+                                                <span className="text-primary text-xs tracking-tighter">{item.quantity}x</span>
+                                                {item.menuItem.name}
+                                            </span>
                                             <span>${item.priceAtOrder}</span>
                                         </div>
                                     ))}
-                                    <div className="pt-2 border-t border-slate-50 flex justify-between font-black text-secondary">
+                                    <div className="pt-4 border-t border-slate-50 flex justify-between font-black text-secondary text-lg">
                                         <span>Total</span>
-                                        <span>${order.totalAmount}</span>
+                                        <span className="text-primary">${order.totalAmount}</span>
                                     </div>
                                 </div>
                                 {order.status === 'pending' && (
-                                    <button className="w-full py-4 bg-primary text-white rounded-2xl font-black shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">
-                                        Accept Order
-                                    </button>
+                                    <div className="flex gap-3">
+                                        <button className="flex-1 py-4 bg-secondary text-white rounded-2xl font-black text-sm shadow-lg hover:bg-slate-800 transition-all">
+                                            Decline
+                                        </button>
+                                        <button className="flex-[2] py-4 bg-primary text-white rounded-2xl font-black text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">
+                                            Accept & Prepare
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         ))}

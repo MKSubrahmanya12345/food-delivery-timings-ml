@@ -13,8 +13,15 @@ const startServer = async () => {
         // await sequelize.sync({ force: false }); 
         await sequelize.sync({ alter: true }); // ??$$$ - Adjust schema without deleting data
         
-        app.listen(PORT, () => {
+        const server = app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
+        });
+
+        server.on('error', (e) => {
+            if (e.code === 'EADDRINUSE') {
+                console.log(`Port ${PORT} is busy, trying ${parseInt(PORT) + 1}...`);
+                app.listen(parseInt(PORT) + 1);
+            }
         });
     } catch (error) {
         console.error('Failed to start server:', error);
