@@ -37,7 +37,7 @@ services:
           property: host
 
   # Frontend (Static Site)
-  - type: static
+  - type: static_site
     name: deliverease-frontend
     env: static
     rootDir: frontend
